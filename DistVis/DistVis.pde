@@ -20,7 +20,7 @@ Serial myPort;
 
 /* -----------------------Setup ---------------------------*/
 void setup(){
- size(600, 400); //Use entire screen size.
+ size(displayWidth, displayHeight); //Use entire screen size.
  smooth(); // draws all shapes with smooth edges.
  
  /* Calculate the size of the squares and initialise the Squares array */
@@ -101,7 +101,7 @@ void drawSquares(){
 
 /* ---------------------sketchFullScreen---------------------------*/
 // This puts processing into Full Screen Mode
-/*
+
 boolean sketchFullScreen() {
  return true;
 }
