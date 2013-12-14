@@ -11,49 +11,76 @@
  on 10 Nov 2012.
  */
 
+#include <NewPing.h>
 
 #define echoPin 7 // Echo Pin
 #define trigPin 8 // Trigger Pin
 #define LEDPin 13 // Onboard LED
 
-int maximumRange = 200; // Maximum range needed
+int maximumRange = 50; // Maximum range needed
 int minimumRange = 0; // Minimum range needed
-long duration, distance; // Duration used to calculate distance
+long distance;
+
+NewPing sonar(trigPin, echoPin, maximumRange); // NewPing setup of pins and maximum distance.
+
+boolean inSight = false;
+
+int led = 9;
+int brightness = 0;    // how bright the LED is
+int brightness2 = 0;
+int brightIntensity = 0;
+int fadeAmount = 5;    // how many points to fade the LED by
+
+
 
 void setup() {
  Serial.begin (9600);
  pinMode(trigPin, OUTPUT);
  pinMode(echoPin, INPUT);
- pinMode(LEDPin, OUTPUT); // Use LED indicator (if required)
+ pinMode(led, OUTPUT);
 }
 
 void loop() {
-/* The following trigPin/echoPin cycle is used to determine the
- distance of the nearest object by bouncing soundwaves off of it. */ 
- digitalWrite(trigPin, LOW); 
- delayMicroseconds(2); 
+  
+ //distSensor-----------------------------------------------------
+ 
+  unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
+  Serial.print("Ping: ");
+  Serial.print(sonar.convert_cm(uS)); // Convert ping time to distance and print result (0 = outside set distance range, no ping echo)
+  Serial.println("cm");
+ 
+  distance = sonar.convert_cm(uS);
+ 
+ //distSensor-----------------------------------------------------
+ 
+ //FadeLED--------------------------------------------------------
 
- digitalWrite(trigPin, HIGH);
- delayMicroseconds(10); 
- 
- digitalWrite(trigPin, LOW);
- duration = pulseIn(echoPin, HIGH);
- 
- //Calculate the distance (in cm) based on the speed of sound.
- distance = duration/58.2;
- 
- if (distance >= maximumRange || distance <= minimumRange){
- /* Send a negative number to computer and Turn LED ON 
- to indicate "out of range" */
- Serial.println("-1");
- digitalWrite(LEDPin, HIGH); 
+
+ if (distance < 10) {
+   inSight = true;
+ } else {
+   inSight = false;
  }
- else {
- /* Send the distance to the computer using Serial protocol, and
- turn LED OFF to indicate successful reading. */
- Serial.println(distance);
- digitalWrite(LEDPin, LOW); 
+ 
+ if(inSight) {  
+   analogWrite(led, brightness); 
+   brightness = brightness + fadeAmount;
+   
+   if (brightness == 0 || brightness == 255) {
+      fadeAmount = -fadeAmount ; 
+   }
  }
+ 
+if(inSight == false) { 
+   analogWrite(led, brightness2); 
+   brightness2 = brightness2 + fadeAmount;
+   
+   if (brightness2 == 0 || brightness2 == 40) {
+      fadeAmount = -fadeAmount ; 
+   }
+ }
+ 
+ //FadeLED--------------------------------------------------------
  
  //Delay 50ms before next reading.
  delay(50);
