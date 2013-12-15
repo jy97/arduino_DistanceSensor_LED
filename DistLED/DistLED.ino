@@ -17,12 +17,16 @@
 #define trigPin 8 // Trigger Pin
 #define LEDPin 13 // Onboard LED
 
+
+
 int maximumRange = 200; // Maximum range needed
-long distance;
+long distance;  //stores distance 
+int LDRin = A0;
 
-NewPing sonar(trigPin, echoPin, maximumRange); // NewPing setup of pins and maximum distance.
+NewPing sonar(trigPin, echoPin, maximumRange); // NewPing setup of pins and maximum distance
 
-boolean inSight = false;
+boolean inSight = false;  //check if something is in front of distance sensor
+boolean onGround = false;  //check whether the object is on the ground or not
 
 int led = 9;
 int brightness = 0;    // how bright the LED is
@@ -36,11 +40,30 @@ void setup() {
  Serial.begin (9600);
  pinMode(trigPin, OUTPUT);
  pinMode(echoPin, INPUT);
+ pinMode(LDRin, INPUT);
  pinMode(led, OUTPUT);
 }
 
 void loop() {
+ 
+ //LDR------------------------------------------------------------
+  int LDRval = analogRead(LDRin);  
   
+  int brightVal = map(LDRval, 120, 405, 0, 100); // Map distance to the range 0 - 255
+  brightVal = constrain(brightVal, 0, 100); // Limit to desired range
+  
+ // Serial.print("brightness: ");  Serial.println(brightVal);  Serial.println(" ");
+  
+  if (brightVal < 15) {
+   onGround = true;
+ // Serial.println("I'm on ground!");
+  } else {
+   onGround = false; 
+ // Serial.println("Someone picked me up!");
+  }
+ //LDR------------------------------------------------------------ 
+
+
  //distSensor-----------------------------------------------------
  
   unsigned int uS = sonar.ping(); // Send ping, get ping time in microseconds (uS).
@@ -68,7 +91,7 @@ void loop() {
    inSight = false;
  }
  
- if(inSight) {  
+ if(inSight && !onGround) {  // if the object is closer than 10cm & lift from ground
    analogWrite(led, brightness); 
    brightness = brightness + fadeAmount;
    
@@ -77,7 +100,7 @@ void loop() {
    }
  }
  
-if(inSight == false) { 
+if(!inSight) { // if the object is out of range
    analogWrite(led, brightness2); 
    brightness2 = brightness2 + fadeAmount2;
    
