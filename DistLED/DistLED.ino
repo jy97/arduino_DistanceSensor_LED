@@ -17,10 +17,11 @@
 #define trigPin 8 // Trigger Pin
 #define LEDPin 13 // Onboard LED
 
-
+int sensors[2]; //number of sensors
+int inByte; //stores receiving serial
 
 int maximumRange = 200; // Maximum range needed
-long distance;  //stores distance 
+long distVal;  //stores distance 
 int LDRin = A0;
 
 NewPing sonar(trigPin, echoPin, maximumRange); // NewPing setup of pins and maximum distance
@@ -38,10 +39,15 @@ int fadeAmount2 = 1;
 
 void setup() {
  Serial.begin (9600);
+ 
+ sensors[0] = 0;
+ sensors[1] = 0;
+ 
  pinMode(trigPin, OUTPUT);
  pinMode(echoPin, INPUT);
  pinMode(LDRin, INPUT);
  pinMode(led, OUTPUT);
+ 
 }
 
 void loop() {
@@ -52,7 +58,7 @@ void loop() {
   int brightVal = map(LDRval, 120, 405, 0, 100); // Map distance to the range 0 - 255
   brightVal = constrain(brightVal, 0, 100); // Limit to desired range
   
- // Serial.print("brightness: ");  Serial.println(brightVal);  Serial.println(" ");
+  //Serial.print("brightness: ");  Serial.println(brightVal);  Serial.println(" ");
   
   if (brightVal < 15) {
    onGround = true;
@@ -71,13 +77,12 @@ void loop() {
  // Serial.print(sonar.convert_cm(uS)); // Convert ping time to distance and print result (0 = outside set distance range, no ping echo)
  // Serial.println("cm");
  
-  distance = (sonar.convert_cm(uS));
+  distVal = (sonar.convert_cm(uS));
   //Serial.println(distance);
   
-  int val = map(distance, 0, 40, 0, 255); // Map distance to the range 0 - 255
-  val = constrain(val, 0, 255); // Limit to desired range
-  Serial.write(val); // sends data to serial port as "bytes"
- // Serial.println(val);
+  int distance = map(distVal, 0, 40, 0, 255); // Map distance to the range 0 - 255
+  distance = constrain(distance, 0, 255); // Limit to desired range
+  //Serial.write(distance); // sends data to serial port as "bytes"
   delay(5);
  
  //distSensor-----------------------------------------------------
@@ -111,8 +116,18 @@ if(!inSight) { // if the object is out of range
  
  //FadeLED--------------------------------------------------------
  
+ 
+
+    sensors[0] = distance;
+    sensors[1] = brightVal;
+
+    Serial.print(sensors[0]);
+    Serial.print(",");
+    Serial.println(sensors[1]);          
+
+ 
+ 
  //Delay 50ms before next reading.
  delay(50);
 }
-
 
