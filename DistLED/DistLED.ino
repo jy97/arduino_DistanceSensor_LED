@@ -29,16 +29,18 @@ void setup() {
  
  sensors[0] = 0;
  sensors[1] = 0;
- 
+ inByte = 0;
  pinMode(trigPin, OUTPUT);
  pinMode(echoPin, INPUT);
  pinMode(LDRin, INPUT);
  pinMode(led, OUTPUT);
- 
+ startComm();
 }
 
 void loop() {
  
+ if (Serial.available() > 0) { 
+  
  //LDR------------------------------------------------------------
   int LDRval = analogRead(LDRin);  
   
@@ -77,7 +79,7 @@ void loop() {
  //FadeLED--------------------------------------------------------
 
 
- if (distance < 10) {
+ if (distance < 50) {
    inSight = true;
  } else {
    inSight = false;
@@ -116,5 +118,13 @@ if(!inSight) { // if the object is out of range
  
  //Delay 50ms before next reading.
  delay(50);
+ }
+}
+
+void startComm() {
+  while (Serial.available() <= 0) {  //wait for processing to send signal
+    Serial.println("0,0"); // resets serial
+    delay(300);            // wait 300 until next read
+  }
 }
 

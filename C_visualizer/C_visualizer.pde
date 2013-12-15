@@ -1,12 +1,12 @@
 import processing.serial.*;
 Serial myPort;  // define serial port
 
-int distSensor = 0;
+int dist = 0;
 int LDR = 0;
 
 void setup() {
   background(255);
-  size(400, 400);
+  size(800, 800);
   //println(Serial.list());  // List all the available serial ports
 
   myPort = new Serial(this, Serial.list()[4], 9600); // open serial port
@@ -15,16 +15,21 @@ void setup() {
 }
 
 void draw() {
-  
-      
-    noStroke();
-    fill(255-distSensor);
-    ellipse(width/2, height/2, distSensor, distSensor);
     
+  ellipseMode(CORNER);
+    noStroke();
+    fill(LDR, dist, LDR);
+    
+      translate(width/2, height/2);
+      rotate(radians(frameCount));
+    
+    
+    ellipse(LDR, LDR, dist, dist);
+
     if (LDR < 15) {
-     println("on the ground");
+     println("I'm on the ground");
     } else {
-     println("picked up");
+     println("Someone picked me up");
     }
 }
   
@@ -35,7 +40,7 @@ void serialEvent(Serial myPort) {
   int sensors[] = int(split(myString, ',')); // read multiple sensors, cut serial by comma
  
   if (sensors.length > 1) {
-    distSensor = sensors[0];
+    dist = sensors[0];
     LDR = sensors[1];
   }
   
