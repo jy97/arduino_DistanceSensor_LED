@@ -1,16 +1,3 @@
-/*
- HC-SR04 Ping distance sensor:
- VCC to arduino 5v 
- GND to arduino GND
- Echo to Arduino pin 7 
- Trig to Arduino pin 8
- 
- This sketch originates from Virtualmix: http://goo.gl/kJ8Gl
- Has been modified by Winkle ink here: http://winkleink.blogspot.com.au/2012/05/arduino-hc-sr04-ultrasonic-distance.html
- And modified further by ScottC here: http://arduinobasics.blogspot.com/
- on 10 Nov 2012.
- */
-
 #include <NewPing.h>
 
 #define echoPin 7 // Echo Pin
