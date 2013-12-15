@@ -5,6 +5,7 @@ int dist = 0;
 int LDR = 0;
 
 void setup() {
+  colorMode(HSB, 255, 255, 255);
   background(255);
   size(800, 800);
   //println(Serial.list());  // List all the available serial ports
@@ -18,7 +19,7 @@ void draw() {
     
   ellipseMode(CORNER);
     noStroke();
-    fill(LDR, dist, LDR);
+    fill(LDR, dist, dist);
     
       translate(width/2, height/2);
       rotate(radians(frameCount));
