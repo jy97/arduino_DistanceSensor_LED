@@ -7,8 +7,9 @@ int LDR = 0;
 boolean onGround = true;
 
 void setup() {
-  colorMode(HSB, 255, 255, 255);
+  colorMode(HSB, 255, 255, 255, 255);
   background(255);
+  smooth();
   size(700, 700);
   //println(Serial.list());  // List all the available serial ports
 
@@ -26,7 +27,7 @@ println(LDR);
   if(!onGround) {
     ellipseMode(CORNER);
     noStroke();
-    fill(dist, LDR, dist);
+    fill(dist, LDR, dist, LDR);
     
       translate(width/2, height/2);
       rotate(radians(frameCount));
@@ -34,7 +35,7 @@ println(LDR);
     ellipse(LDR, dist, dist, dist); 
   }
 
-    if (LDR < 70) {
+    if (LDR < 20) {
      onGround = true;
     // println("I'm on the ground");
     } else {
