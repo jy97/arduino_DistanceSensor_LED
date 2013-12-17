@@ -12,7 +12,7 @@ Square[] mySquares = new Square[numOfShapes];
 int shapeSize;
 
 float dist = 0;
-float connected = 0;
+float LDR = 0;
 
 String[] imFiles={ "fp1.png", "fp2.png", "fp3.png" };
 PImage[] im= new PImage[3];
@@ -46,14 +46,14 @@ void draw() {
  background(255); //Make the background BLACK
  delay(50); //Delay used to refresh screen
  drawSquares(); //Draw the pattern of squares
- println(dist);
- println(connected);
-   if(connected == 0) {
+ //println(dist);
+
+   if(LDR > 30) {
     imageMode(CENTER);
     image(im[(int)random(2)],width/2, height/2,100,150);
   }
+   
 }
-
 
 
   
@@ -66,7 +66,7 @@ void draw() {
  
   if (sensors.length > 1) {
     dist = map(sensors[0], 0, 255, 50, 255);
-    connected = sensors[1];
+    LDR = sensors[1];
 
   }
   

@@ -6,18 +6,17 @@
 
 int sensors[2]; //number of sensors
 int inByte; //stores receiving serial
-
+int LDR = 0;
 int maximumRange = 200; // Maximum range needed
 long distVal;  //stores distance 
-//int LDRin = A0;
+int LDRin = A0;
 
 NewPing sonar(trigPin, echoPin, maximumRange); // NewPing setup of pins and maximum distance
 
 //boolean inSight = false;  //check if something is in front of distance sensor
 //boolean onGround = false;  //check whether the object is on the ground or not
 
-int buttonPin = 2; 
-int buttonState = 0;
+
 int led = 9;
 int brightness = 0;    // how bright the LED is
 //int brightness2 = 0;
@@ -31,11 +30,10 @@ void setup() {
  
  sensors[0] = 0;
  sensors[1] = 0;
- inByte = 0;
- pinMode(buttonPin, INPUT); 
+ inByte = 0; 
  pinMode(trigPin, OUTPUT);
  pinMode(echoPin, INPUT);
- //pinMode(LDRin, INPUT);
+ pinMode(LDRin, INPUT);
  pinMode(led, OUTPUT);
  startComm();
 }
@@ -45,14 +43,13 @@ void loop() {
  if (Serial.available() > 0) { 
   
  //LDR------------------------------------------------------------
-/*
+  
   int LDRval = analogRead(LDRin);  
-  
-  int brightVal = map(LDRval, 120, 405, 0, 100); // Map distance to the range 0 - 255
-  brightVal = constrain(brightVal, 0, 100); // Limit to desired range
-  
+  int brightVal = map(LDRval, 50, 900, 0, 255); // Map distance to the range 0 - 255
+  brightVal = constrain(brightVal, 0, 255); // Limit to desired range
+
   //Serial.print("brightness: ");  Serial.println(brightVal);  Serial.println(" ");
-  
+/*  
   if (brightVal < 15) {
    onGround = true;
  // Serial.println("I'm on ground!");
@@ -120,12 +117,12 @@ if(!inSight) { // if the object is out of range
  
  //FadeLED--------------------------------------------------------
  
-   buttonState = digitalRead(buttonPin);
+
  
 
     sensors[0] = distance;
-    //sensors[1] = brightVal;
-    sensors[1] = buttonState;
+    sensors[1] = brightVal;
+
 
     Serial.print(sensors[0]);
     Serial.print(",");
