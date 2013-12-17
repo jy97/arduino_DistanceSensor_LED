@@ -9,19 +9,21 @@ int inByte; //stores receiving serial
 
 int maximumRange = 200; // Maximum range needed
 long distVal;  //stores distance 
-int LDRin = A0;
+//int LDRin = A0;
 
 NewPing sonar(trigPin, echoPin, maximumRange); // NewPing setup of pins and maximum distance
 
-boolean inSight = false;  //check if something is in front of distance sensor
-boolean onGround = false;  //check whether the object is on the ground or not
+//boolean inSight = false;  //check if something is in front of distance sensor
+//boolean onGround = false;  //check whether the object is on the ground or not
 
+int buttonPin = 2; 
+int buttonState = 0;
 int led = 9;
 int brightness = 0;    // how bright the LED is
-int brightness2 = 0;
+//int brightness2 = 0;
 
 int fadeAmount = 15;    // how many points to fade the LED by
-int fadeAmount2 = 1;
+//int fadeAmount2 = 1;
 
 
 void setup() {
@@ -30,9 +32,10 @@ void setup() {
  sensors[0] = 0;
  sensors[1] = 0;
  inByte = 0;
+ pinMode(buttonPin, INPUT); 
  pinMode(trigPin, OUTPUT);
  pinMode(echoPin, INPUT);
- pinMode(LDRin, INPUT);
+ //pinMode(LDRin, INPUT);
  pinMode(led, OUTPUT);
  startComm();
 }
@@ -42,6 +45,7 @@ void loop() {
  if (Serial.available() > 0) { 
   
  //LDR------------------------------------------------------------
+/*
   int LDRval = analogRead(LDRin);  
   
   int brightVal = map(LDRval, 120, 405, 0, 100); // Map distance to the range 0 - 255
@@ -56,6 +60,7 @@ void loop() {
    onGround = false; 
  // Serial.println("Someone picked me up!");
   }
+*/
  //LDR------------------------------------------------------------ 
 
 
@@ -73,12 +78,21 @@ void loop() {
   distance = constrain(distance, 0, 255); // Limit to desired range
   //Serial.write(distance); // sends data to serial port as "bytes"
   delay(5);
- 
+
  //distSensor-----------------------------------------------------
  
  //FadeLED--------------------------------------------------------
+    
+    analogWrite(led, brightness);
+    brightness = brightness + fadeAmount;
+   
+   if (brightness == 0 || brightness == 255) {
+      fadeAmount = -fadeAmount ; 
+   }
 
 
+
+/*
  if (distance < 50) {
    inSight = true;
  } else {
@@ -102,13 +116,16 @@ if(!inSight) { // if the object is out of range
       fadeAmount2 = -fadeAmount2; 
    }
  }
+ */
  
  //FadeLED--------------------------------------------------------
  
+   buttonState = digitalRead(buttonPin);
  
 
     sensors[0] = distance;
-    sensors[1] = brightVal;
+    //sensors[1] = brightVal;
+    sensors[1] = buttonState;
 
     Serial.print(sensors[0]);
     Serial.print(",");

@@ -1,6 +1,7 @@
 
 import processing.serial.*;
 Serial myPort;  // define serial port
+String portString;
 
 int numOfShapes = 60; // Number of squares to display on screen 
 int shapeSpeed = 2; // Speed at which the shapes move to new position
@@ -11,8 +12,9 @@ Square[] mySquares = new Square[numOfShapes];
 int shapeSize;
 
 float dist = 0;
+float connected = 0;
 
-String[] imFiles={ "fp1.jpg","fp2.jpg","fp3.jpg" };
+String[] imFiles={ "fp1.png", "fp2.png", "fp3.png" };
 PImage[] im= new PImage[3];
 
 
@@ -45,12 +47,15 @@ void draw() {
  delay(50); //Delay used to refresh screen
  drawSquares(); //Draw the pattern of squares
  println(dist);
+ println(connected);
+   if(connected == 0) {
+    imageMode(CENTER);
+    image(im[(int)random(2)],width/2, height/2,100,150);
+  }
 }
 
 
-  void mouseClicked() {
-    image(im[(int)random(3)],0,0, width ,height);
-  }
+
   
   
   void serialEvent(Serial myPort) {
@@ -61,9 +66,11 @@ void draw() {
  
   if (sensors.length > 1) {
     dist = map(sensors[0], 0, 255, 50, 255);
-  //  LDR = sensors[1];
+    connected = sensors[1];
+
   }
   
+
   if(dist == 50.0 || dist == 255.0) {
     dist = height - shapeSize; 
   }
@@ -109,13 +116,6 @@ void drawSquares(){
  rect(mySquares[i].getX(), mySquares[i].getY(),shapeSize,shapeSize-10);
  }
 }
-
-/* ---------------------sketchFullScreen---------------------------*/
-// This puts processing into Full Screen Mode
-/*boolean sketchFullScreen() {
- return true;
-}
-*/
 
 /* ---------------------CLASS: Square ---------------------------*/
 class Square{
