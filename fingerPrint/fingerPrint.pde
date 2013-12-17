@@ -23,7 +23,7 @@ void setup() {
 
  size(displayWidth,400);
    background(255);
-
+   smooth();
   
   /* Calculate the size of the squares and initialise the Squares array */
  shapeSize = (width/numOfShapes); 
@@ -114,7 +114,13 @@ void drawSquares(){
  
  /* Draw the square on the screen */
  rect(mySquares[i].getX(), mySquares[i].getY(),shapeSize,shapeSize-10);
+ fill(redVal, 255, blueVal);
+ text(dist,mySquares[1].getX(), mySquares[2].getY()+10);
  }
+}
+
+boolean sketchFullScreen() {
+ return true;
 }
 
 /* ---------------------CLASS: Square ---------------------------*/

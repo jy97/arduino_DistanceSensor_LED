@@ -21,7 +21,7 @@ int led = 9;
 int brightness = 0;    // how bright the LED is
 //int brightness2 = 0;
 
-int fadeAmount = 15;    // how many points to fade the LED by
+int fadeAmount = 5;    // how many points to fade the LED by
 //int fadeAmount2 = 1;
 
 
